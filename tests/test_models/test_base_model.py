@@ -53,3 +53,24 @@ class TestBaseModel(unittest.TestCase):
         self.assertEqual(
                 model_dict['updated_at'], model.updated_at.isoformat()
         )
+
+    def test_create_instance_from_dict(self):
+        """
+        Test creating a BaseModel instance from dictionary representation.
+        """
+        model = BaseModel()
+        model.name = "My_First_Model"
+        model.my_number = 89
+        model_dict = model.to_dict()
+
+        new_model = BaseModel(**model_dict)
+
+        self.assertIsInstance(new_model, BaseModel)
+        self.assertEqual(new_model.id, model.id)
+        self.assertEqual(new_model.name, model.name)
+        self.assertEqual(new_model.my_number, model.my_number)
+        self.assertEqual(new_model.created_at, model.created_at)
+        self.assertEqual(new_model.updated_at, model.updated_at)
+
+if __name__ == '__main__':
+    unittest.main()
