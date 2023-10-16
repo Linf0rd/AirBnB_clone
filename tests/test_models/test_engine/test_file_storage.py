@@ -53,7 +53,8 @@ class TestFileStorage(unittest.TestCase):
         """
         obj = BaseModel()
         self.storage.new(obj)
-        with patch('models.engine.file_storage.open', create=True) as mock_file:
+        with patch(
+                'models.engine.file_storage.open', create=True) as mock_file:
             self.storage.save()
             mock_file.assert_called_once_with
             (self.storage._FileStorage__file_path, 'w')
@@ -68,7 +69,10 @@ class TestFileStorage(unittest.TestCase):
         self.storage.reload()
         all_objs = self.storage.all()
         self.assertIn("BaseModel.{}".format(obj.id), all_objs)
-        self.assertEqual(all_objs["BaseModel.{}".format(obj.id)].to_dict(), obj.to_dict())
+        self.assertEqual(
+                all_objs["BaseModel.{}".format(obj.id)].to_dict(),
+                obj.to_dict()
+        )
 
     def test_reload_file_not_found(self):
         """
