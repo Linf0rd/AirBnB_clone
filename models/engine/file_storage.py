@@ -19,7 +19,7 @@ class FileStorage:
         """
         Returns the dictionary __objects.
         """
-        return self.__objects
+        return self.__objects.copy()
 
     def new(self, obj):
         """
@@ -36,7 +36,7 @@ class FileStorage:
         for key, obj in self.__objects.items():
             obj_dict[key] = obj.to_dict()
         with open(self.__file_path, 'w') as file:
-            json.dump(obj_dict, file)
+            json.dump(obj_dict, file, indent=4)
 
     def reload(self):
         """
@@ -52,4 +52,4 @@ class FileStorage:
                     obj = cls(**value)
                     self.__objects[key] = obj
         except FileNotFoundError:
-            pass
+            self.__objects = {}
