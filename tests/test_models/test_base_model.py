@@ -2,10 +2,13 @@
 """"
 Test cases
 """
-
+import os
+import json
+import models
 import unittest
 from models.base_model import BaseModel
 from datetime import datetime
+from models.engine.file_storage import FileStorage
 
 
 class TestBaseModel(unittest.TestCase):
@@ -54,6 +57,12 @@ class TestBaseModel(unittest.TestCase):
                 model_dict['updated_at'], model.updated_at.isoformat()
         )
 
+
+class TestBaseModelDict(unittest.TestCase):
+    """
+    Test cases for creating BaseModel instance from dictionary representation.
+    """
+
     def test_create_instance_from_dict(self):
         """
         Test creating a BaseModel instance from dictionary representation.
@@ -71,6 +80,7 @@ class TestBaseModel(unittest.TestCase):
         self.assertEqual(new_model.my_number, model.my_number)
         self.assertEqual(new_model.created_at, model.created_at)
         self.assertEqual(new_model.updated_at, model.updated_at)
+
 
 if __name__ == '__main__':
     unittest.main()
