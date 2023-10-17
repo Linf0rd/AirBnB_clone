@@ -3,23 +3,15 @@
 Defines the FileStorage class.
 """
 import json
-import os
-from datetime import datetime
-import uuid
 from models.base_model import BaseModel
 from models.user import User
-from models.state import State
-from models.city import City
-from models.amenity import Amenity
-from models.place import Place
-from models.review import Review
 
 
-class FileStorage(object):
+class FileStorage:
     """
-    Serializes instances to a JSON file and deserializes
-    JSON file to instances.
+    Serializes instances to a JSON file and deserializes JSON file to instances.
     """
+
     __file_path = "file.json"
     __objects = {}
 
@@ -27,7 +19,7 @@ class FileStorage(object):
         """
         Returns the dictionary __objects.
         """
-        return self.__objects.copy()
+        return self.__objects
 
     def new(self, obj):
         """
@@ -44,12 +36,11 @@ class FileStorage(object):
         for key, obj in self.__objects.items():
             obj_dict[key] = obj.to_dict()
         with open(self.__file_path, 'w') as file:
-            json.dump(obj_dict, file, indent=4)
+            json.dump(obj_dict, file)
 
     def reload(self):
         """
-        Deserializes the JSON file to __objects
-        (only if the JSON file (__file_path) exists).
+        Deserializes the JSON file to __objects (only if the JSON file (__file_path) exists).
         """
         try:
             with open(self.__file_path, 'r') as file:
@@ -60,4 +51,4 @@ class FileStorage(object):
                     obj = cls(**value)
                     self.__objects[key] = obj
         except FileNotFoundError:
-            self.__objects = {}
+            pass
