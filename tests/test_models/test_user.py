@@ -3,6 +3,8 @@
 
 import unittest
 from models.user import User
+import models
+import os
 
 
 class TestUser(unittest.TestCase):

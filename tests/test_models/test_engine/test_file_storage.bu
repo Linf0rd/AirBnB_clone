@@ -80,6 +80,14 @@ class TestFileStorage(unittest.TestCase):
                 obj.to_dict()
         )
 
+    def test_reload_file_not_found(self):
+        """
+        Test the reload() method when the file is not found.
+        """
+        with patch('builtins.open', side_effect=FileNotFoundError):
+            self.storage.reload()
+            self.assertEqual(self.storage.all(), {})
+
 
 if __name__ == '__main__':
     unittest.main()

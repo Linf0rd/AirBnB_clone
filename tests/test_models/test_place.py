@@ -3,6 +3,9 @@
 
 import unittest
 from models.place import Place
+from models.base_model import BaseModel
+import models
+import os
 
 
 class TestPlace(unittest.TestCase):
