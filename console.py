@@ -15,7 +15,7 @@ class HBNBCommand(cmd.Cmd):
     """
 
     prompt = "(hbnb) "
-    valid_classes = ["BaseModel"]
+    valid_classes = ["BaseModel", "User"]
 
     def emptyline(self):
         """
@@ -37,8 +37,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, arg):
         """
-        Creates a new instance of BaseModel, saves it (to the JSON file)
-        and prints the id.
+        Creates a new instance of BaseModel or User, saves it (to the JSON file), and prints the ID.
         """
         args = arg.split()
         if len(args) == 0:
@@ -52,8 +51,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_show(self, arg):
         """
-        Prints the string representation of an instance
-        based on the class name and id.
+        Prints the string representation of an instance based on the class name and ID.
         """
         args = arg.split()
         if len(args) == 0:
@@ -72,8 +70,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_destroy(self, arg):
         """
-        Deletes an instance based on the class name
-        and id (save the change into the JSON file).
+        Deletes an instance based on the class name and ID (saves the change into the JSON file).
         """
         args = arg.split()
         if len(args) == 0:
@@ -93,8 +90,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_all(self, arg):
         """
-        Prints all string representation of all instances
-        based or not on the class name.
+        Prints all string representations of all instances based or not on the class name.
         """
         args = arg.split()
         all_objs = storage.all()
@@ -103,14 +99,12 @@ class HBNBCommand(cmd.Cmd):
         elif args[0] not in self.valid_classes:
             print("** class doesn't exist **")
         else:
-            class_objs = [str(obj) for obj in all_objs.values() if
-                          type(obj).__name__ == args[0]]
+            class_objs = [str(obj) for obj in all_objs.values() if type(obj).__name__ == args[0]]
             print(class_objs)
 
     def do_update(self, arg):
         """
-        Updates an instance based on the class name
-        and id by adding or updating attribute.
+        Updates an instance based on the class name and ID by adding or updating an attribute.
         """
         args = arg.split()
         if len(args) == 0:
