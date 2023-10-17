@@ -9,7 +9,8 @@ from models.user import User
 
 class FileStorage:
     """
-    Serializes instances to a JSON file and deserializes JSON file to instances.
+    Serializes instances to a JSON file and
+    deserializes JSON file to instances.
     """
 
     __file_path = "file.json"
@@ -40,7 +41,8 @@ class FileStorage:
 
     def reload(self):
         """
-        Deserializes the JSON file to __objects (only if the JSON file (__file_path) exists).
+        Deserializes the JSON file to __objects
+        (only if the JSON file (__file_path) exists).
         """
         try:
             with open(self.__file_path, 'r') as file:
