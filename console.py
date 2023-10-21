@@ -109,9 +109,10 @@ class HBNBCommand(cmd.Cmd):
         elif args[0] not in self.valid_classes:
             print("** class doesn't exist **")
         else:
+            class_name = args[0]
             class_objs = [
-                str(obj) for obj in all_objs.values()
-                if type(obj).__name__ == args[0]
+                    str(obj) for obj in all_objs.values()
+                    if type(obj).__name__ == class_name
             ]
             print(class_objs)
 
@@ -147,6 +148,19 @@ class HBNBCommand(cmd.Cmd):
                         print("** attribute doesn't exist **")
             else:
                 print("** no instance found **")
+
+    def default(self, line):
+        """
+        Override default method to handle <class name>.all() command.
+        """
+        if ".all()" in line:
+            class_name = line.split(".")[0]
+            if class_name in self.valid_classes:
+                self.do_all(class_name)
+            else:
+                print("** class doesn't exist **")
+        else:
+            print("*** Unknown syntax: {}".format(line))
 
 
 if __name__ == '__main__':
