@@ -151,8 +151,9 @@ class HBNBCommand(cmd.Cmd):
 
     def default(self, line):
         """
-        Override default method to handle <class name>.all()
-        and <class name>.count() commands.
+        Override default method to handle <class name>.all(), <class
+        name>.count(), <class name>.show(<id>),
+        and <class name>.destroy(<id>) commands.
         """
         if ".all()" in line:
             class_name = line.split(".")[0]
@@ -181,6 +182,21 @@ class HBNBCommand(cmd.Cmd):
                 key = "{}.{}".format(class_name, instance_id)
                 if key in all_objs:
                     print(all_objs[key])
+                else:
+                    print("** no instance found **")
+            else:
+                print("** class doesn't exist **")
+        elif ".destroy(" in line:
+            class_name = line.split(".")[0]
+            if class_name in self.valid_classes:
+                id_start = line.find("(") + 1
+                id_end = line.find(")")
+                instance_id = line[id_start:id_end].replace("\"", "")
+                all_objs = storage.all()
+                key = "{}.{}".format(class_name, instance_id)
+                if key in all_objs:
+                    del all_objs[key]
+                    storage.save()
                 else:
                     print("** no instance found **")
             else:
