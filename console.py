@@ -151,9 +151,11 @@ class HBNBCommand(cmd.Cmd):
 
     def default(self, line):
         """
-        Override default method to handle <class name>.all(), <class
-        name>.count(), <class name>.show(<id>),
-        and <class name>.destroy(<id>) commands.
+        Override default method to handle <class name>.all(),
+        <class name>.count(), <class name>.show(<id>),
+        <class name>.destroy(<id>), and
+        <class name>.update(<id>, <attribute name>, <attribute value>)
+        commands.
         """
         if ".all()" in line:
             class_name = line.split(".")[0]
@@ -197,6 +199,42 @@ class HBNBCommand(cmd.Cmd):
                 if key in all_objs:
                     del all_objs[key]
                     storage.save()
+                else:
+                    print("** no instance found **")
+            else:
+                print("** class doesn't exist **")
+        elif ".update(" in line:
+            class_name = line.split(".")[0]
+            if class_name in self.valid_classes:
+                id_start = line.find("(") + 1
+                id_end = line.find(",")
+                instance_id = line[id_start:id_end].replace("\"", "").strip()
+                attribute_start = line.find(",") + 1
+                attribute_end = line.rfind(",")
+                attribute_name = (
+                        line[attribute_start:attribute_end]
+                        .replace("\"", "")
+                        .strip()
+                )
+                value_start = line.rfind(",") + 1
+                value_end = line.find(")")
+                attribute_value = (
+                        line[value_start:value_end]
+                        .replace("\"", "")
+                        .strip()
+                )
+                all_objs = storage.all()
+                key = "{}.{}".format(class_name, instance_id)
+                if key in all_objs:
+                    obj = all_objs[key]
+                    if hasattr(obj, attribute_name):
+                        attr_type = type(getattr(obj, attribute_name))
+                        setattr(obj, attribute_name,
+                                attr_type(attribute_value))
+                        obj.save()
+                    else:
+                        setattr(obj, attribute_name, attribute_value)
+                        obj.save()
                 else:
                     print("** no instance found **")
             else:
