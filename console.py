@@ -151,12 +151,24 @@ class HBNBCommand(cmd.Cmd):
 
     def default(self, line):
         """
-        Override default method to handle <class name>.all() command.
+        Override default method to handle <class name>.all()
+        and <class name>.count() commands.
         """
         if ".all()" in line:
             class_name = line.split(".")[0]
             if class_name in self.valid_classes:
                 self.do_all(class_name)
+            else:
+                print("** class doesn't exist **")
+        elif ".count()" in line:
+            class_name = line.split(".")[0]
+            if class_name in self.valid_classes:
+                all_objs = storage.all()
+                class_objs = [
+                        obj for obj in all_objs.values()
+                        if type(obj).__name__ == class_name
+                ]
+                print(len(class_objs))
             else:
                 print("** class doesn't exist **")
         else:
