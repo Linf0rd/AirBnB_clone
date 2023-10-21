@@ -119,36 +119,42 @@ class HBNBCommand(cmd.Cmd):
 
     def do_update(self, arg):
         """
-        Updates an instance based on the class name and ID
-        by adding or updating an attribute.
-        """
-        args = arg.split()
-        if len(args) == 0:
-            print("** class name missing **")
-        elif args[0] not in self.valid_classes:
-            print("** class doesn't exist **")
-        elif len(args) == 1:
-            print("** instance id missing **")
-        else:
-            all_objs = storage.all()
-            key = "{}.{}".format(args[0], args[1])
-            if key in all_objs:
-                if len(args) == 2:
-                    print("** attribute name missing **")
-                elif len(args) == 3:
-                    print("** value missing **")
-                else:
-                    attr_name = args[2]
-                    attr_value = args[3]
-                    obj = all_objs[key]
-                    if hasattr(obj, attr_name):
-                        attr_type = type(getattr(obj, attr_name))
-                        setattr(obj, attr_name, attr_type(attr_value))
-                        obj.save()
+    Updates an instance based on the class name and ID
+    by adding or updating an attribute.
+    """
+    args = arg.split()
+    if len(args) == 0:
+        print("** class name missing **")
+    elif args[0] not in self.valid_classes:
+        print("** class doesn't exist **")
+    elif len(args) == 1:
+        print("** instance id missing **")
+    elif len(args) == 2:
+        print("** attribute name missing **")
+    elif len(args) == 3:
+        print("** value missing **")
+    else:
+        all_objs = storage.all()
+        key = "{}.{}".format(args[0], args[1])
+        if key in all_objs:
+            obj = all_objs[key]
+            try:
+                attributes = eval(args[2])
+            except Exception as e:
+                print(f"** invalid dictionary: {str(e)} **")
+                return
+            if type(attributes) is dict:
+                for k, v in attributes.items():
+                    if hasattr(obj, k):
+                        v_type = type(getattr(obj, k))
+                        setattr(obj, k, v_type(v))
                     else:
-                        print("** attribute doesn't exist **")
+                        setattr(obj, k, v)
+                obj.save()
             else:
-                print("** no instance found **")
+                print("** invalid dictionary **")
+        else:
+            print("** no instance found **")
 
     def default(self, line):
         """
