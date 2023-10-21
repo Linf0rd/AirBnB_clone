@@ -140,8 +140,21 @@ class HBNBCommand(cmd.Cmd):
             obj = all_objs[key]
             try:
                 attributes = eval(args[2])
-            except Exception as e:
-                print(f"** invalid dictionary: {str(e)} **")
+            except:
+                attributes = args[2].strip("{}").split(", ")
+                for attribute in attributes:
+                    attr = attribute.split(":")
+                    if len(attr) != 2:
+                        print("** invalid dictionary **")
+                        return
+                    attr_name = attr[0].strip("'\" ")
+                    attr_value = attr[1].strip("'\" ")
+                    if hasattr(obj, attr_name):
+                        attr_type = type(getattr(obj, attr_name))
+                        setattr(obj, attr_name, attr_type(attr_value))
+                    else:
+                        setattr(obj, attr_name, attr_value)
+                obj.save()
                 return
             if type(attributes) is dict:
                 for k, v in attributes.items():
