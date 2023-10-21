@@ -12,6 +12,7 @@ from models.city import City
 from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
+import json
 
 
 class HBNBCommand(cmd.Cmd):
@@ -153,9 +154,9 @@ class HBNBCommand(cmd.Cmd):
         """
         Override default method to handle <class name>.all(),
         <class name>.count(), <class name>.show(<id>),
-        <class name>.destroy(<id>), and
-        <class name>.update(<id>, <attribute name>, <attribute value>)
-        commands.
+        <class name>.destroy(<id>), <class name>.update(<id>,
+        <attribute name>, <attribute value>), and
+        <class name>.update(<id>, <dictionary representation>) commands.
         """
         if ".all()" in line:
             class_name = line.split(".")[0]
@@ -209,32 +210,21 @@ class HBNBCommand(cmd.Cmd):
                 id_start = line.find("(") + 1
                 id_end = line.find(",")
                 instance_id = line[id_start:id_end].replace("\"", "").strip()
-                attribute_start = line.find(",") + 1
-                attribute_end = line.rfind(",")
-                attribute_name = (
-                        line[attribute_start:attribute_end]
-                        .replace("\"", "")
-                        .strip()
-                )
-                value_start = line.rfind(",") + 1
-                value_end = line.find(")")
-                attribute_value = (
-                        line[value_start:value_end]
-                        .replace("\"", "")
-                        .strip()
-                )
+                dictionary_start = line.find(", {") + 1
+                dictionary_end = line.find("})") + 1
+                dictionary_str = line[dictionary_start:dictionary_end]
+                dictionary = json.loads(dictionary_str)
                 all_objs = storage.all()
                 key = "{}.{}".format(class_name, instance_id)
                 if key in all_objs:
                     obj = all_objs[key]
-                    if hasattr(obj, attribute_name):
-                        attr_type = type(getattr(obj, attribute_name))
-                        setattr(obj, attribute_name,
-                                attr_type(attribute_value))
-                        obj.save()
-                    else:
-                        setattr(obj, attribute_name, attribute_value)
-                        obj.save()
+                    for attr_name, attr_value in dictionary.items():
+                        if hasattr(obj, attr_name):
+                            attr_type = type(getattr(obj, attr_name))
+                            setattr(obj, attr_name, attr_type(attr_value))
+                        else:
+                            setattr(obj, attr_name, attr_value)
+                    obj.save()
                 else:
                     print("** no instance found **")
             else:
