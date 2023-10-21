@@ -171,6 +171,20 @@ class HBNBCommand(cmd.Cmd):
                 print(len(class_objs))
             else:
                 print("** class doesn't exist **")
+        elif ".show(" in line:
+            class_name = line.split(".")[0]
+            if class_name in self.valid_classes:
+                id_start = line.find("(") + 1
+                id_end = line.find(")")
+                instance_id = line[id_start:id_end].replace("\"", "")
+                all_objs = storage.all()
+                key = "{}.{}".format(class_name, instance_id)
+                if key in all_objs:
+                    print(all_objs[key])
+                else:
+                    print("** no instance found **")
+            else:
+                print("** class doesn't exist **")
         else:
             print("*** Unknown syntax: {}".format(line))
 
