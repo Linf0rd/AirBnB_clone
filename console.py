@@ -119,63 +119,43 @@ class HBNBCommand(cmd.Cmd):
 
     def do_update(self, arg):
         """
-    Updates an instance based on the class name and ID
-    by adding or updating an attribute.
-    """
-    args = arg.split()
-    if len(args) == 0:
-        print("** class name missing **")
-    elif args[0] not in self.valid_classes:
-        print("** class doesn't exist **")
-    elif len(args) == 1:
-        print("** instance id missing **")
-    elif len(args) == 2:
-        print("** attribute name missing **")
-    elif len(args) == 3:
-        print("** value missing **")
-    else:
-        all_objs = storage.all()
-        key = "{}.{}".format(args[0], args[1])
-        if key in all_objs:
-            obj = all_objs[key]
-            try:
-                attributes = eval(args[2])
-            except:
-                attributes = args[2].strip("{}").split(", ")
-                for attribute in attributes:
-                    attr = attribute.split(":")
-                    if len(attr) != 2:
-                        print("** invalid dictionary **")
-                        return
-                    attr_name = attr[0].strip("'\" ")
-                    attr_value = attr[1].strip("'\" ")
+        Updates an instance based on the class name and ID
+        by adding or updating an attribute.
+        """
+        args = arg.split()
+        if len(args) == 0:
+            print("** class name missing **")
+        elif args[0] not in self.valid_classes:
+            print("** class doesn't exist **")
+        elif len(args) == 1:
+            print("** instance id missing **")
+        elif len(args) == 2:
+            print("** attribute name missing **")
+        elif len(args) == 3:
+            print("** value missing **")
+        else:
+            all_objs = storage.all()
+            key = "{}.{}".format(args[0], args[1])
+            if key in all_objs:
+                obj = all_objs[key]
+                dictionary = eval(args[2])
+                for attr_name, attr_value in dictionary.items():
                     if hasattr(obj, attr_name):
                         attr_type = type(getattr(obj, attr_name))
                         setattr(obj, attr_name, attr_type(attr_value))
                     else:
                         setattr(obj, attr_name, attr_value)
                 obj.save()
-                return
-            if type(attributes) is dict:
-                for k, v in attributes.items():
-                    if hasattr(obj, k):
-                        v_type = type(getattr(obj, k))
-                        setattr(obj, k, v_type(v))
-                    else:
-                        setattr(obj, k, v)
-                obj.save()
             else:
-                print("** invalid dictionary **")
-        else:
-            print("** no instance found **")
+                print("** no instance found **")
 
     def default(self, line):
         """
         Override default method to handle <class name>.all(),
         <class name>.count(), <class name>.show(<id>),
-        <class name>.destroy(<id>), <class name>.update(<id>,
-        <attribute name>, <attribute value>), and
-        <class name>.update(<id>, <dictionary representation>) commands.
+        <class name>.destroy(<id>), and
+        <class name>.update(<id>, <attribute name>, <attribute value>)
+        commands.
         """
         if ".all()" in line:
             class_name = line.split(".")[0]
